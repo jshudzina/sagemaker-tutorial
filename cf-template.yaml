@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  SageMakerDemoRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: SageMakerTutorialRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSageMakerFullAccess
+        - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "glue.amazonaws.com"
+                - "sagemaker.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      
