@@ -18,3 +18,23 @@ Resources:
                 - "sagemaker.amazonaws.com"
             Action:
               - "sts:AssumeRole"
+      Policies:
+        -
+          PolicyName: "SageMakerGluePolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action: "iam:PassRole"
+                Resource: "*"
+                Condition:
+                  StringEquals:
+                    "iam:PassedToService": "sagemaker.amazonaws.com"
+              -
+                Effect: "Allow"
+                Action: "iam:PassRole"
+                Resource: "*"
+                Condition:
+                  StringEquals:
+                    "iam:PassedToService": "glue.amazonaws.com"
