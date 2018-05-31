@@ -2,6 +2,20 @@
 
 Tutorial for BigData Tech 2018
 
+## Role Setup
+
+
+![Upload Template](/images/CreateStack01.png)
+
+![Name Stack](/images/CreateStack02.png)
+
+Click next for advanced Settings
+
+![Acknowledge IAM Capabilities](/images/CreateStack03.png)
+
+![Stack Ready](/images/CreateStack04.png)
+
+
 
 ## Setup
 

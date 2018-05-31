@@ -18,4 +18,3 @@ Resources:
                 - "sagemaker.amazonaws.com"
             Action:
               - "sts:AssumeRole"
-      
