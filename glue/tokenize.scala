@@ -14,10 +14,12 @@ object Tokenizer {
     val sc: SparkContext = new SparkContext()
     val glueContext: GlueContext = new GlueContext(sc)
     // @params: [JOB_NAME]
-    val args = GlueArgParser.getResolvedOptions(sysArgs, Seq("JOB_NAME").toArray)
+    val args = GlueArgParser.getResolvedOptions(sysArgs, Seq("JOB_NAME","sagemaker-bucket").toArray)
     Job.init(args("JOB_NAME"), glueContext, args.asJava)
     // User Code
     Job.commit()
+      
+    val bucket = args("sagemaker-bucket")
 
     val spark = glueContext.getSparkSession
     import spark.implicits._
@@ -27,7 +29,7 @@ object Tokenizer {
         .option("header","true")
         .option("inferSchema","true")
         .option("escape","\"")
-        .csv("s3://sagemaker-us-east-1-228889150161/data/nyt-comments/CommentsMarch2018.csv")
+        .csv(s"s3://${bucket}/data/nyt-comments/CommentsMarch2018.csv")
 
     val filtered_df = df.filter(df("commentBody").isNotNull)
 
@@ -63,7 +65,7 @@ object Tokenizer {
     labeled_df
         .write
         .mode("overwrite")
-        .parquet("s3://sagemaker-us-east-1-228889150161/data/nyt-features/labeled_data.parquet")
+        .parquet(s"s3://${bucket}/data/nyt-features/labeled_data.parquet")
 
     labeled_df
         .coalesce(1)
@@ -72,6 +74,6 @@ object Tokenizer {
         .format("sagemaker")
         .option("labelColumnName", "labels")
         .option("featuresColumnName", "features")
-        .save("s3://sagemaker-us-east-1-228889150161/data/nyt-record-io/training.rec")
+        .save(s"s3://${bucket}/data/nyt-record-io/training.rec")
   }
 }
