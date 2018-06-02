@@ -8,8 +8,21 @@ This tutorial attempts to add a software engineering perspective to model
 development and deployment.  Machine learning models don't only
 live in Jupyter notebooks. Often the models are integrated into applications.  
 These application might employ several models to complete a task. For example, a
-notional Question & Answer application might leverage several models to answer a
+notional Question & Answer (Q&A) application might leverage several models to answer a
 question.
+
+Although the notional Q&A app might leverage a single framework to complete
+the task, a monolithic application imposes several constraints.  A monolithic
+app restricts researchers to implement a model in a particular language or API.
+A monolithic forces the researchers to deploy the entire application instead of
+swapping out a model.  Finally, a monolithic application makes it difficult to
+test competing models in parallel (i.e. A/B Testing).
+
+If the notional Q&A app leveraged a micro-service architect instead of a
+monolithic application, then the researchers have a more flexibility becuase the
+models are developed and deployed independently.  As a consequence, the
+researchers aren't restricted to a single language or model framework.  Additionally,
+micro-services are easier to swap out and or run in parallel.
 
 ![Notional Q&A System](/images/QAMicroServices.png)
 
