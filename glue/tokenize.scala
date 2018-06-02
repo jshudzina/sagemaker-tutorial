@@ -13,13 +13,13 @@ object Tokenizer {
   def main(sysArgs: Array[String]) {
     val sc: SparkContext = new SparkContext()
     val glueContext: GlueContext = new GlueContext(sc)
-    // @params: [JOB_NAME]
-    val args = GlueArgParser.getResolvedOptions(sysArgs, Seq("JOB_NAME","sagemaker-bucket").toArray)
+    // @params: [JOB_NAME, sagemaker_bucket]
+    println(sysArgs)
+    val args = GlueArgParser.getResolvedOptions(sysArgs, Seq("JOB_NAME","sagemaker_bucket").toArray)
+    val bucket = args.getOrElse("sagemaker_bucket","")
     Job.init(args("JOB_NAME"), glueContext, args.asJava)
     // User Code
     Job.commit()
-      
-    val bucket = args("sagemaker-bucket")
 
     val spark = glueContext.getSparkSession
     import spark.implicits._
