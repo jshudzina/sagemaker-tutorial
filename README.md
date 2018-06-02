@@ -1,4 +1,4 @@
-# Sagemaker MicroService Tutorial
+# Sage Maker Micro Service Tutorial
 
 Tutorial for BigData Tech 2018
 
