@@ -6,7 +6,7 @@ Tutorial for BigData Tech 2018
 
 1. Create the ```SageMakerTutorialRole``` via the supplied CloudFormation
   template, [cf-template.yaml](cf-template.yaml).  See detailed instructions [here](RoleSetup.md).
-2. Create a SageMaker notebook using the ```SageMakerTutorialRole```
+2. Create a SageMaker notebook using the ```SageMakerTutorialRole```. See detailed instructions [here](CreateNotebook.md).
 
 
 ### Notebook Setup
