@@ -14,18 +14,20 @@ question.
 ![Notional Q&A System](/images/QAMicroServices.png)
 
 
-Although Amazon provides
-[multiple tutorials](https://github.com/awslabs/amazon-sagemaker-examples), This
-tutorials focus on the model development and not the model's integration with an
-application.  
-
 ## SageMaker Micro-Services
 
 ![SageMaker MicroServices](/images/SagemakerDiagram.png)
 
 ## Tutorial Overview
 
-1. Data Preparation with AWS glue
+Although Amazon provides
+[multiple tutorials](https://github.com/awslabs/amazon-sagemaker-examples), the
+Amazon  tutorials focus on the model development and not the model's integration
+with an application.  This tutorial integrates SageMaker with other services,
+like AWS Glue and Lambda.
+
+The tutorial will...
+1. Prep NY Times comments as a bag-of-words training set with AWS glue
 2. Train a Neural Topic Model (NTM) with Amazon SageMaker's Training Service
 3. Deploy the NTM with Amazon SageMaker's Deployment Service
 4. Mock a lambda function to call the NTM's end point
