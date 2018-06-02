@@ -1,6 +1,34 @@
-# Sage Maker Micro Service Tutorial
+# Sage Maker Micro-Service Tutorial
 
-Tutorial for BigData Tech 2018
+A Tutorial for BigData Tech 2018
+
+## Motivation
+
+This tutorial attempts to add a software engineering perspective to model
+development and deployment.  Machine learning models don't only
+live in Jupyter notebooks. Often the models are integrated into applications.  
+These application might employ several models to complete a task. For example, a
+notional Question & Answer application might leverage several models to answer a
+question.
+
+![Notional Q&A System](/images/QAMicroServices.png)
+
+
+Although Amazon provides
+[multiple tutorials](https://github.com/awslabs/amazon-sagemaker-examples), This
+tutorials focus on the model development and not the model's integration with an
+application.  
+
+## SageMaker Micro-Services
+
+![SageMaker MicroServices](/images/SagemakerDiagram.png)
+
+## Tutorial Overview
+
+1. Data Preparation with AWS glue
+2. Train a Neural Topic Model (NTM) with Amazon SageMaker's Training Service
+3. Deploy the NTM with Amazon SageMaker's Deployment Service
+4. Mock a lambda function to call the NTM's end point
 
 ## Tutorial Installation
 
