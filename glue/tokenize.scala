@@ -102,7 +102,7 @@ object Tokenizer {
     
     //Sample some comments for testing
     labeled_df
-        .sample(false, 0.01)
+        .sample(false, 0.0001)
         .select("commentBody")
         .coalesce(1)
         .write
