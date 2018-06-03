@@ -9,6 +9,7 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.ml.feature.{RegexTokenizer, StopWordsRemover, CountVectorizer, CountVectorizerModel}
 
 import scala.collection.JavaConverters._
+import scala.xml.XML
 
 object Tokenizer {
   def main(sysArgs: Array[String]) {
@@ -31,12 +32,19 @@ object Tokenizer {
         .option("inferSchema","true")
         .option("escape","\"")
         .csv(s"s3://${bucket}/data/nyt-comments/CommentsMarch2018.csv")
+        
+    def remove_html(str: String): String = {
+        XML.loadString(s"<p>${str}</p>").text
+    }
+    
+    val clean_comment = udf[String, String](remove_html)
 
     val filtered_df = df.filter(df("commentBody").isNotNull)
+        .withColumn("cleanComment", clean_comment(df("commentBody")))
 
-    //Tokenize and filter stop words
+    //Tokenize are remove stop words
     val regexTokenizer = new RegexTokenizer()
-    .setInputCol("commentBody")
+    .setInputCol("cleanComment")
     .setOutputCol("words")
     .setPattern("\\W")
     .setMinTokenLength(3)
@@ -49,17 +57,15 @@ object Tokenizer {
 
     val removed_df = remover.transform(tokenized_df)
 
-    //Create a vocabulary 
+    //Create vocab
     val cvModel: CountVectorizerModel = new CountVectorizer()
         .setInputCol("filtered_words")
         .setOutputCol("features")
-        .setVocabSize(1000)
+        .setVocabSize(5000)
         .setMinDF(5)
         .fit(removed_df)
-    
-      
-    //Save off the vocabulary for lambda functions...
-    val json_vacab = cvModel
+        
+    val json_vocab = cvModel
         .vocabulary
         .toSeq
         .zipWithIndex
@@ -69,22 +75,22 @@ object Tokenizer {
         .mkString("{\n",",\n","\n}")
         
     val s3 = AmazonS3ClientBuilder.defaultClient()
-    s3.putObject(bucket,"data/nyt-features/vocab.json",json_vacab)
-
-    //Convert tokens to a bag-of-words
+    s3.putObject(bucket,"data/nyt-features/vocab.json",json_vocab)
+        
+    //Create the bag-of-words
     val feature_df = cvModel.transform(removed_df)
 
     val labeled_df = feature_df
         .select("articleID", "commentID", "commentBody", "features")
         .withColumn("labels", lit(0.0))
 
-    //Save labeled data for Athena
+    //Save a parquet version of the features for Athena
     labeled_df
         .write
         .mode("overwrite")
         .parquet(s"s3://${bucket}/data/nyt-features/labeled_data.parquet")
 
-    //Save labeled data for sagemaker in Record IO format
+    //Save a protocol buffer version of features for Sagemaker
     labeled_df
         .coalesce(1)
         .write
@@ -93,5 +99,14 @@ object Tokenizer {
         .option("labelColumnName", "labels")
         .option("featuresColumnName", "features")
         .save(s"s3://${bucket}/data/nyt-record-io/training.rec")
+    
+    //Sample some comments for testing
+    labeled_df
+        .sample(false, 0.01)
+        .select("commentBody")
+        .coalesce(1)
+        .write
+        .mode("overwrite")
+        .csv(s"s3://${bucket}/data/nyt-features/sampled_data")
   }
 }
